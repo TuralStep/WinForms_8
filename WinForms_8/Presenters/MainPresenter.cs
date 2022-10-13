@@ -34,8 +34,8 @@ public class MainPresenter
         _mainView.SearchEvent += _mainView_SearchEvent;
         _mainView.DeleteEvent += _mainView_DeleteEvent;
         _mainView.AddEvent += _mainView_AddEvent;
+        _mainView.UpdateEvent += _mainView_UpdateEvent;
     }
-
 
     private void _mainView_SearchEvent(object? sender, EventArgs e)
     {
@@ -93,6 +93,33 @@ public class MainPresenter
 
         MessageBox.Show("Succesfully added student...");
 
+    }
+
+
+    private void _mainView_UpdateEvent(object? sender, EventArgs e)
+    {
+        var current = _bindingSource.Current;
+
+        if (current is null)
+        {
+            MessageBox.Show("You should select a student to update it...", "Warning...", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            return;
+        }
+
+        var result = ((Form)_addView).ShowDialog();
+        var updatingItem = current as Student;
+
+        if (result is DialogResult.Cancel)
+            return;
+
+        updatingItem.FirstName = _addView.FirstName;
+        updatingItem.LastName = _addView.LastName;
+        updatingItem.BirthOfDate = DateOnly.Parse(_addView.DateOfBirth.ToShortDateString());
+        updatingItem.Score = Convert.ToSingle(_addView.Score);
+
+        _bindingSource[_bindingSource.IndexOf(current)] = updatingItem;
+
+        MessageBox.Show("Succesfully updated student...");
     }
 
 }

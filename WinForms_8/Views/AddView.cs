@@ -28,14 +28,11 @@ namespace WinForms_8.Views
         public event EventHandler SaveEvent;
         public event EventHandler CancelEvent;
 
-        private void btn_save_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-        }
+        private void btn_save_Click(object sender, EventArgs e) =>
+            SaveEvent?.Invoke(sender, e);
 
-        private void btn_cancel_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
-        }
+        private void btn_cancel_Click(object sender, EventArgs e) =>
+            CancelEvent?.Invoke(sender, e);
+
     }
 }

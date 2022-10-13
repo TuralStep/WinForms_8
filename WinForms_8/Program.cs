@@ -14,6 +14,7 @@ namespace WinForms_8
             IAddView addView = new AddView();
 
             new MainPresenter(mainView,addView);
+            new AddPresenter(addView);
 
             Application.Run((Form)mainView);
         }
