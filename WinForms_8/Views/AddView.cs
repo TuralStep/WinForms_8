@@ -15,6 +15,7 @@ namespace WinForms_8.Views
         public AddView()
         {
             InitializeComponent();
+            ClearTexts();
         }
 
         public string FirstName => txt_firstName.Text;
@@ -25,8 +26,8 @@ namespace WinForms_8.Views
 
         public DateTime DateOfBirth => datePicker_birth.SelectionStart;
 
-        public event EventHandler SaveEvent;
-        public event EventHandler CancelEvent;
+        public event EventHandler? SaveEvent;
+        public event EventHandler? CancelEvent;
 
         private void btn_save_Click(object sender, EventArgs e) =>
             SaveEvent?.Invoke(sender, e);
@@ -34,5 +35,12 @@ namespace WinForms_8.Views
         private void btn_cancel_Click(object sender, EventArgs e) =>
             CancelEvent?.Invoke(sender, e);
 
+        public void ClearTexts()
+        {
+            txt_firstName.Text = string.Empty;
+            txt_lastName.Text = string.Empty;
+            numeric_score.Value = 1;
+            datePicker_birth.TodayDate = DateTime.Now;
+        }
     }
 }

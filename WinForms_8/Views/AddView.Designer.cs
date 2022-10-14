@@ -105,6 +105,7 @@
             this.datePicker_birth.MaxSelectionCount = 1;
             this.datePicker_birth.MinDate = new System.DateTime(1900, 1, 1, 0, 0, 0, 0);
             this.datePicker_birth.Name = "datePicker_birth";
+            this.datePicker_birth.ShowToday = false;
             this.datePicker_birth.TabIndex = 7;
             // 
             // btn_cancel
@@ -163,14 +164,13 @@
         }
 
         #endregion
-
-        private TextBox txt_firstName;
-        private TextBox txt_lastName;
-        private NumericUpDown numeric_score;
         private Button btn_save;
-        private MonthCalendar datePicker_birth;
         private Button btn_cancel;
         private Label label1;
         private Label label2;
+        public TextBox txt_firstName;
+        public TextBox txt_lastName;
+        public NumericUpDown numeric_score;
+        public MonthCalendar datePicker_birth;
     }
 }

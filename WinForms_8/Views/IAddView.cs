@@ -12,4 +12,6 @@ public interface IAddView
     event EventHandler SaveEvent;
     event EventHandler CancelEvent;
 
+    void ClearTexts();
+
 }

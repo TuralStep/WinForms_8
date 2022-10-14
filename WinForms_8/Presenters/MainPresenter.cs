@@ -76,6 +76,8 @@ public class MainPresenter
     private void _mainView_AddEvent(object? sender, EventArgs e)
     {
 
+        ((Form)_addView).Text = "Add Page";
+        _addView.ClearTexts();
         var result = ((Form)_addView).ShowDialog();
 
         if (result == DialogResult.Cancel)
@@ -92,7 +94,6 @@ public class MainPresenter
         _bindingSource.Add(student);
 
         MessageBox.Show("Succesfully added student...");
-
     }
 
 
@@ -106,8 +107,34 @@ public class MainPresenter
             return;
         }
 
+        ((Form)_addView).Text = "Update Page";
+        var updatingItem = (current as Student)!;
+
+        foreach (var control in ((Form)_addView).Controls)
+        {
+            if (control is TextBox)
+            {
+                TextBox tb = (control as TextBox)!;
+                switch (tb.Name)
+                {
+                    case "txt_firstName":
+                        tb.Text = updatingItem.FirstName;
+                        break;
+                    case "txt_lastName":
+                        tb.Text = updatingItem.LastName;
+                        break;
+                }
+            }
+            else if (control is NumericUpDown)
+                (control as NumericUpDown)!.Value = (decimal)updatingItem.Score;
+            else if (control is MonthCalendar)
+            {
+                (control as MonthCalendar)!.TodayDate = updatingItem.BirthOfDate.ToDateTime(new TimeOnly(0, 0, 0));
+                (control as MonthCalendar)!.Update();
+            }
+        }
+
         var result = ((Form)_addView).ShowDialog();
-        var updatingItem = current as Student;
 
         if (result is DialogResult.Cancel)
             return;
