@@ -10,21 +10,21 @@ using System.Windows.Forms;
 
 namespace WinForms_8.Views
 {
-    public partial class AddView : Form, IAddView
+    public partial class AddUpdateView : Form, IAddUpdateView
     {
-        public AddView()
+        public AddUpdateView()
         {
             InitializeComponent();
             ClearTexts();
         }
 
-        public string FirstName => txt_firstName.Text;
+        public string FirstName { get => txt_firstName.Text; set => txt_firstName.Text = value; }
 
-        public string LastName => txt_lastName.Text;
+        public string LastName { get => txt_lastName.Text; set => txt_lastName.Text = value; }
 
-        public decimal Score => numeric_score.Value;
+        public decimal Score { get => numeric_score.Value; set => numeric_score.Value = value; }
 
-        public DateTime DateOfBirth => datePicker_birth.SelectionStart;
+        public DateTime DateOfBirth { get => datePicker_birth.SelectionStart; set => datePicker_birth.SelectionStart = value; }
 
         public event EventHandler? SaveEvent;
         public event EventHandler? CancelEvent;

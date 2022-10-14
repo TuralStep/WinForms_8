@@ -1,4 +1,5 @@
 ﻿using WinForms_8.Models;
+using WinForms_8.Repositories;
 using WinForms_8.Views;
 
 namespace WinForms_8.Presenters;
@@ -8,25 +9,19 @@ public class MainPresenter
 {
 
     private readonly IMainView _mainView;
-    private readonly IAddView _addView;
-    private readonly BindingSource _bindingSource;
-    private readonly List<Student> _students;
+    private readonly IAddUpdateView _addUpdateView;
 
-    public MainPresenter(IMainView mainView, IAddView addView)
+    private readonly BindingSource _bindingSource;
+    private readonly IStudentRepository _repository;
+
+    public MainPresenter(IMainView mainView, IAddUpdateView addUpdateView, IStudentRepository repo)
     {
         _mainView = mainView;
-        _addView = addView;
-
-        _students = new List<Student>()
-        {
-            new Student("Miri","Huseynzade",new DateOnly(2003,9,1),8.3f),
-            new Student("Tural","Haci-Nebili",new DateOnly(2007,6,24),9.7f),
-            new Student("Kamran","Kerimzade",new DateOnly(1999,3,27),10.2f)
-        };
+        _addUpdateView = addUpdateView;
 
         // Binding Source
         _bindingSource = new();
-        _bindingSource.DataSource = _students;
+        _bindingSource.DataSource = _repository.GetList();
         _mainView.SetStudentListBindingSource(_bindingSource);
 
 
@@ -40,25 +35,27 @@ public class MainPresenter
     private void _mainView_SearchEvent(object? sender, EventArgs e)
     {
         var srcValue = _mainView.SearchValue;
-        if (!string.IsNullOrWhiteSpace(srcValue))
-            _bindingSource.DataSource = _students
-                .Where(s =>
+
+
+        bool isNullOrWhiteSpace = string.IsNullOrWhiteSpace(srcValue);
+
+        _bindingSource.DataSource = isNullOrWhiteSpace switch
+        {
+            true => _repository.GetList(),
+            false => _repository.GetList(s =>
                             s.FirstName
-                            .ToLower()
-                            .Contains(srcValue)
+                            .Contains(srcValue, StringComparison.OrdinalIgnoreCase)
                             ||
                             s.LastName
                             .ToLower()
-                            .Contains(srcValue))
-                .ToList();
-        else
-            _bindingSource.DataSource = _students;
+                            .Contains(srcValue, StringComparison.OrdinalIgnoreCase))
+        };
     }
 
 
     private void _mainView_DeleteEvent(object? sender, EventArgs e)
     {
-        var deletedItem = _bindingSource.Current;
+        var deletedItem = _bindingSource.Current as Student;
 
         if (deletedItem is null)
         {
@@ -66,6 +63,7 @@ public class MainPresenter
             return;
         }
 
+        _repository.Remove(deletedItem);
         _bindingSource.Remove(deletedItem);
 
         MessageBox.Show($"Deleted student...");
@@ -76,21 +74,22 @@ public class MainPresenter
     private void _mainView_AddEvent(object? sender, EventArgs e)
     {
 
-        ((Form)_addView).Text = "Add Page";
-        _addView.ClearTexts();
-        var result = ((Form)_addView).ShowDialog();
+        ((Form)_addUpdateView).Text = "Add Page";
+        _addUpdateView.ClearTexts();
+        var result = _addUpdateView.ShowDialog();
 
         if (result == DialogResult.Cancel)
             return;
 
         var student = new Student()
         {
-            FirstName = _addView.FirstName,
-            LastName = _addView.LastName,
-            BirthOfDate = DateOnly.Parse(_addView.DateOfBirth.ToShortDateString()),
-            Score = (float)_addView.Score
+            FirstName = _addUpdateView.FirstName,
+            LastName = _addUpdateView.LastName,
+            BirthOfDate = _addUpdateView.DateOfBirth,
+            Score = (float)_addUpdateView.Score
         };
 
+        _repository.Add(student);
         _bindingSource.Add(student);
 
         MessageBox.Show("Succesfully added student...");
@@ -107,41 +106,26 @@ public class MainPresenter
             return;
         }
 
-        ((Form)_addView).Text = "Update Page";
+        ((Form)_addUpdateView).Text = "Update Page";
         var updatingItem = (current as Student)!;
 
-        foreach (var control in ((Form)_addView).Controls)
-        {
-            if (control is TextBox)
-            {
-                TextBox tb = (control as TextBox)!;
-                switch (tb.Name)
-                {
-                    case "txt_firstName":
-                        tb.Text = updatingItem.FirstName;
-                        break;
-                    case "txt_lastName":
-                        tb.Text = updatingItem.LastName;
-                        break;
-                }
-            }
-            else if (control is NumericUpDown)
-                (control as NumericUpDown)!.Value = (decimal)updatingItem.Score;
-            else if (control is MonthCalendar)
-                (control as MonthCalendar)!.SelectionStart = updatingItem.BirthOfDate.ToDateTime(new TimeOnly(0, 0, 0));
-        }
+        _addUpdateView.FirstName = updatingItem.FirstName;
+        _addUpdateView.LastName = updatingItem.LastName;
+        _addUpdateView.Score = (decimal)updatingItem.Score;
+        _addUpdateView.DateOfBirth = updatingItem.BirthOfDate;
 
-        var result = ((Form)_addView).ShowDialog();
+        var result = _addUpdateView.ShowDialog();
 
         if (result is DialogResult.Cancel)
             return;
 
-        updatingItem.FirstName = _addView.FirstName;
-        updatingItem.LastName = _addView.LastName;
-        updatingItem.BirthOfDate = DateOnly.Parse(_addView.DateOfBirth.ToShortDateString());
-        updatingItem.Score = Convert.ToSingle(_addView.Score);
+        updatingItem.FirstName = _addUpdateView.FirstName;
+        updatingItem.LastName = _addUpdateView.LastName;
+        updatingItem.BirthOfDate = _addUpdateView.DateOfBirth;
+        updatingItem.Score = Convert.ToSingle(_addUpdateView.Score);
 
-        _bindingSource[_bindingSource.IndexOf(current)] = updatingItem;
+        _repository.Update(updatingItem);
+        _bindingSource.ResetCurrentItem();
 
         MessageBox.Show("Succesfully updated student...");
     }

@@ -4,32 +4,32 @@ using WinForms_8.Views;
 namespace WinForms_8.Presenters;
 
 
-public class AddPresenter
+public class AddUpdatePresenter
 {
 
-    private readonly IAddView _addView;
+    private readonly IAddUpdateView _addUpdateView;
 
-    public AddPresenter(IAddView addView)
+    public AddUpdatePresenter(IAddUpdateView addView)
     {
-        _addView = addView;
+        _addUpdateView = addView;
 
-        _addView.SaveEvent += _addView_SaveEvent;
-        _addView.CancelEvent += _addView_CancelEvent;
+        _addUpdateView.SaveEvent += _addView_SaveEvent;
+        _addUpdateView.CancelEvent += _addView_CancelEvent;
 
     }
 
     private void _addView_CancelEvent(object? sender, EventArgs e)
     {
-        ((Form)_addView).DialogResult = DialogResult.Cancel;
+        ((Form)_addUpdateView).DialogResult = DialogResult.Cancel;
     }
 
     private void _addView_SaveEvent(object? sender, EventArgs e)
     {
         StringBuilder sb = new();
 
-        string fName = _addView.FirstName;
-        string lName = _addView.LastName;
-        DateTime bDate = _addView.DateOfBirth;
+        string fName = _addUpdateView.FirstName;
+        string lName = _addUpdateView.LastName;
+        DateTime bDate = _addUpdateView.DateOfBirth;
 
         if (string.IsNullOrWhiteSpace(fName) || fName.Length < 3)
             sb.Append("First name is incorrect...\n");
@@ -46,6 +46,6 @@ public class AddPresenter
             return;
         }
 
-        ((Form)_addView).DialogResult = DialogResult.OK;
+        _addUpdateView.DialogResult = DialogResult.OK;
     }
 }

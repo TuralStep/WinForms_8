@@ -1,4 +1,5 @@
 using WinForms_8.Presenters;
+using WinForms_8.Repositories;
 using WinForms_8.Views;
 
 namespace WinForms_8
@@ -10,11 +11,13 @@ namespace WinForms_8
         {
             ApplicationConfiguration.Initialize();
 
-            IMainView mainView = new MainView();
-            IAddView addView = new AddView();
+            IAddUpdateView addView = new AddUpdateView();
+            new AddUpdatePresenter(addView);
 
-            new MainPresenter(mainView,addView);
-            new AddPresenter(addView);
+            IStudentRepository repository = new EfStudentRepository();
+
+            IMainView mainView = new MainView();
+            new MainPresenter(mainView,addView,repository);
 
             Application.Run((Form)mainView);
         }

@@ -1,6 +1,6 @@
 ﻿namespace WinForms_8.Views
 {
-    partial class AddView
+    partial class AddUpdateView
     {
         /// <summary>
         /// Required designer variable.
