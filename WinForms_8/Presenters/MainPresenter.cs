@@ -128,10 +128,7 @@ public class MainPresenter
             else if (control is NumericUpDown)
                 (control as NumericUpDown)!.Value = (decimal)updatingItem.Score;
             else if (control is MonthCalendar)
-            {
-                (control as MonthCalendar)!.TodayDate = updatingItem.BirthOfDate.ToDateTime(new TimeOnly(0, 0, 0));
-                (control as MonthCalendar)!.Update();
-            }
+                (control as MonthCalendar)!.SelectionStart = updatingItem.BirthOfDate.ToDateTime(new TimeOnly(0, 0, 0));
         }
 
         var result = ((Form)_addView).ShowDialog();

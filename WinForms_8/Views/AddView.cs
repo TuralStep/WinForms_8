@@ -40,7 +40,7 @@ namespace WinForms_8.Views
             txt_firstName.Text = string.Empty;
             txt_lastName.Text = string.Empty;
             numeric_score.Value = 1;
-            datePicker_birth.TodayDate = DateTime.Now;
+            datePicker_birth.SelectionStart = DateTime.Now;
         }
     }
 }
