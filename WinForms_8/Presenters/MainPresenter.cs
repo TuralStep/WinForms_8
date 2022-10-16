@@ -18,6 +18,7 @@ public class MainPresenter
     {
         _mainView = mainView;
         _addUpdateView = addUpdateView;
+        _repository = repo;
 
         // Binding Source
         _bindingSource = new();
@@ -31,6 +32,8 @@ public class MainPresenter
         _mainView.AddEvent += _mainView_AddEvent;
         _mainView.UpdateEvent += _mainView_UpdateEvent;
     }
+
+
 
     private void _mainView_SearchEvent(object? sender, EventArgs e)
     {
@@ -47,7 +50,6 @@ public class MainPresenter
                             .Contains(srcValue, StringComparison.OrdinalIgnoreCase)
                             ||
                             s.LastName
-                            .ToLower()
                             .Contains(srcValue, StringComparison.OrdinalIgnoreCase))
         };
     }

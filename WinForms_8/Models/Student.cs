@@ -28,6 +28,6 @@ public class Student
 
     public override string ToString() =>
         //$"Id: {Id.ToString().Remove(8)}    FirstName: {FirstName}    BirthOfDate: {BirthOfDate}    Score: {Score}";
-        $"FirstName: {FirstName}    BirthOfDate: {BirthOfDate.ToShortDateString()}    Score: {Score}";
+        $"FirstName: {FirstName}    LastName: {LastName}    BirthOfDate: {BirthOfDate.ToShortDateString()}    Score: {Score}";
 
 }

@@ -19,10 +19,10 @@ namespace WinForms_8.Views
 
         public string SearchValue => txt_search.Text;
 
-        public event EventHandler SearchEvent;
-        public event EventHandler AddEvent;
-        public event EventHandler UpdateEvent;
-        public event EventHandler DeleteEvent;
+        public event EventHandler? SearchEvent;
+        public event EventHandler? AddEvent;
+        public event EventHandler? UpdateEvent;
+        public event EventHandler? DeleteEvent;
 
         public void SetStudentListBindingSource(BindingSource source)
             => lBox_students.DataSource = source;

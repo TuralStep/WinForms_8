@@ -14,6 +14,7 @@ namespace WinForms_8
             IAddUpdateView addView = new AddUpdateView();
             new AddUpdatePresenter(addView);
 
+
             IStudentRepository repository = new EfStudentRepository();
 
             IMainView mainView = new MainView();
